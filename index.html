@@ -1,1 +1,1054 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sport's Arena – Reischach / Bruneck</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --black:#0D0D0D; --dark:#161616; --panel:#1E1E1E;
+      --red:#D72C2C; --red2:#A81F1F; --yellow:#F5C518;
+      --green:#7AB332; --blue:#1B6FBB;
+      --light:#F0EDE8; --muted:#888; --border:rgba(255,255,255,0.08);
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family:'Barlow',sans-serif; background:var(--black); color:var(--light); font-size:16px; line-height:1.6; }
+
+    /* ── PAGE SYSTEM ── */
+    .page { display:none; min-height:100vh; }
+    .page.active { display:block; }
+
+    /* ── NAV ── */
+    nav {
+      position:fixed; top:0; left:0; right:0; z-index:200;
+      display:flex; align-items:center; justify-content:space-between;
+      padding:0 2rem; height:64px;
+      background:rgba(13,13,13,0.97);
+      border-bottom:1px solid var(--border);
+      backdrop-filter:blur(10px);
+    }
+    .nav-brand { display:flex; align-items:center; gap:0.7rem; text-decoration:none; cursor:pointer; }
+    .nav-logo-svg { width:42px; height:42px; flex-shrink:0; filter:drop-shadow(0 1px 4px rgba(0,0,0,0.5)); }
+    .nav-brand-tagline { display:flex; flex-direction:column; line-height:1.1; }
+    .nav-brand-tagline .brand-main { font-family:'Barlow Condensed',sans-serif; font-weight:800; font-size:1rem; letter-spacing:0.04em; text-transform:uppercase; color:var(--light); }
+    .nav-brand-tagline .brand-sub { font-family:'Barlow',sans-serif; font-weight:300; font-size:0.58rem; letter-spacing:0.16em; text-transform:uppercase; color:rgba(245,197,24,0.85); }
+    .nav-links { display:flex; gap:0; list-style:none; }
+    .nav-links a {
+      display:block; padding:0 0.9rem; height:64px; line-height:64px;
+      color:var(--muted); text-decoration:none;
+      font-size:0.74rem; letter-spacing:0.1em; text-transform:uppercase; font-weight:500;
+      transition:color 0.2s, background 0.2s; border-left:1px solid var(--border); cursor:pointer;
+    }
+    .nav-links a:hover { color:var(--light); background:rgba(215,44,44,0.15); }
+    .nav-links a.active { color:var(--light); background:rgba(215,44,44,0.12); border-bottom:2px solid var(--red); }
+    .nav-links .nav-cta { background:var(--red); color:#fff; }
+    .nav-links .nav-cta:hover { background:var(--red2); }
+    .nav-toggle { display:none; flex-direction:column; gap:5px; cursor:pointer; padding:8px; }
+    .nav-toggle span { display:block; width:22px; height:2px; background:var(--light); transition:0.3s; }
+
+    /* ── SHARED SECTION ── */
+    .page-section { padding:5.5rem 2.5rem; }
+    .container { max-width:1060px; margin:0 auto; }
+    .sec-label { font-family:'Barlow Condensed',sans-serif; font-size:0.7rem; font-weight:700; letter-spacing:0.22em; text-transform:uppercase; color:var(--red); margin-bottom:0.6rem; }
+    .sec-title { font-family:'Barlow Condensed',sans-serif; font-size:clamp(2rem,5vw,3.2rem); font-weight:800; text-transform:uppercase; line-height:1.0; margin-bottom:1rem; }
+    .sec-body { font-size:1rem; font-weight:300; color:rgba(240,237,232,0.6); line-height:1.75; max-width:560px; }
+    .btn-primary { background:var(--red); color:#fff; font-family:'Barlow Condensed',sans-serif; font-size:0.85rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; padding:0.85rem 2rem; text-decoration:none; display:inline-block; transition:background 0.2s; cursor:pointer; border:none; }
+    .btn-primary:hover { background:var(--red2); }
+    .btn-outline { border:1.5px solid rgba(240,237,232,0.4); color:var(--light); font-family:'Barlow Condensed',sans-serif; font-size:0.85rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; padding:0.85rem 2rem; text-decoration:none; display:inline-block; transition:border-color 0.2s,color 0.2s; }
+    .btn-outline:hover { border-color:var(--light); color:#fff; }
+
+    /* ── HERO ── */
+    .hero { position:relative; min-height:100vh; display:flex; align-items:flex-end; overflow:hidden; }
+    .hero-bg { position:absolute; inset:0; z-index:0; background-image:url('https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/7e/6c/64/pub.jpg?w=1800&h=1000&s=1'); background-size:cover; background-position:center 30%; }
+    .hero-bg::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg,rgba(13,13,13,0.3) 0%,rgba(13,13,13,0.1) 40%,rgba(13,13,13,0.85) 75%,rgba(13,13,13,1) 100%); }
+    .hero-content { position:relative; z-index:1; padding:0 2.5rem 5rem; max-width:780px; }
+    .hero-tag { display:inline-block; background:var(--red); color:#fff; font-family:'Barlow Condensed',sans-serif; font-size:0.7rem; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; padding:0.3rem 0.8rem; margin-bottom:1.4rem; }
+    .hero h1 { font-family:'Barlow Condensed',sans-serif; font-size:clamp(3.5rem,9vw,7rem); font-weight:800; line-height:0.92; text-transform:uppercase; letter-spacing:-0.01em; margin-bottom:1.2rem; }
+    .hero h1 span { color:var(--red); }
+    .hero-sub { font-size:1rem; font-weight:300; color:rgba(240,237,232,0.65); max-width:480px; margin-bottom:2.5rem; }
+    .hero-actions { display:flex; gap:1rem; flex-wrap:wrap; }
+    .hero-stats { position:absolute; bottom:0; right:0; z-index:1; display:flex; }
+    .stat { background:rgba(22,22,22,0.9); border-top:3px solid var(--red); padding:1.2rem 1.8rem; text-align:center; border-left:1px solid var(--border); }
+    .stat-num { font-family:'Barlow Condensed',sans-serif; font-size:2rem; font-weight:800; color:var(--red); line-height:1; }
+    .stat-label { font-size:0.68rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); margin-top:0.3rem; }
+
+    /* ── IMG STRIP ── */
+    .img-strip { display:grid; grid-template-columns:2fr 1fr 1fr; gap:4px; height:300px; }
+    .img-strip img { width:100%; height:100%; object-fit:cover; display:block; }
+
+    /* ── ABOUT ── */
+    .about-grid { display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:center; margin-top:3rem; }
+    .about-img { position:relative; aspect-ratio:4/3; overflow:hidden; }
+    .about-img img { width:100%; height:100%; object-fit:cover; display:block; }
+    .about-img::before { content:''; position:absolute; top:-12px; left:-12px; right:12px; bottom:12px; border:2px solid var(--red); z-index:-1; }
+    .feature-list { margin-top:2rem; display:flex; flex-direction:column; gap:1rem; }
+    .feature-item { display:flex; gap:1rem; align-items:flex-start; }
+    .feature-icon { width:40px; height:40px; background:var(--red); display:flex; align-items:center; justify-content:center; font-size:1.1rem; flex-shrink:0; }
+    .feature-text h4 { font-family:'Barlow Condensed',sans-serif; font-size:1rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; }
+    .feature-text p { font-size:0.87rem; color:var(--muted); font-weight:300; margin-top:0.15rem; }
+
+    /* ── EVENTS ── */
+    .events-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:1.5rem; margin-top:2.5rem; }
+    .event-card { background:var(--panel); border-top:3px solid var(--red); padding:1.6rem; }
+    .event-card h3 { font-family:'Barlow Condensed',sans-serif; font-size:1.2rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.4rem; }
+    .event-card p { font-size:0.88rem; color:var(--muted); font-weight:300; line-height:1.65; }
+    .event-time { font-size:0.75rem; color:var(--red); font-weight:500; margin-top:0.8rem; letter-spacing:0.05em; }
+
+    /* ── HOURS ── */
+    .hours-section { background:var(--red); }
+    .hours-section .sec-label { color:rgba(255,255,255,0.6); }
+    .hours-section .sec-title { color:#fff; }
+    .hours-flex { display:flex; gap:0; margin-top:2.5rem; flex-wrap:wrap; }
+    .hour-col { flex:1; min-width:140px; border-left:1px solid rgba(255,255,255,0.2); padding:1rem 1.5rem; }
+    .hour-col:first-child { border-left:none; }
+    .hour-day { font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase; color:rgba(255,255,255,0.6); font-weight:500; }
+    .hour-time { font-family:'Barlow Condensed',sans-serif; font-size:1.4rem; font-weight:700; color:#fff; margin-top:0.3rem; }
+    .closed { opacity:0.4; }
+
+    /* ── KONTAKT ── */
+    .contact-grid { display:grid; grid-template-columns:1fr 1fr; gap:3rem; margin-top:3rem; }
+    .contact-block h3 { font-family:'Barlow Condensed',sans-serif; font-size:0.8rem; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:var(--red); margin-bottom:1rem; padding-bottom:0.6rem; border-bottom:1px solid var(--border); }
+    .contact-row { display:flex; gap:0.8rem; margin-bottom:0.7rem; align-items:flex-start; }
+    .contact-row a { color:var(--light); text-decoration:none; font-size:0.95rem; font-weight:300; }
+    .contact-row a:hover { color:var(--red); }
+    .contact-row span { font-size:0.95rem; font-weight:300; color:rgba(240,237,232,0.7); }
+    .map-placeholder { background:var(--panel); aspect-ratio:16/9; display:flex; align-items:center; justify-content:center; border:1px solid var(--border); position:relative; overflow:hidden; }
+    .map-placeholder img { width:100%; height:100%; object-fit:cover; opacity:0.45; display:block; }
+    .map-pin { position:absolute; background:var(--red); color:#fff; font-family:'Barlow Condensed',sans-serif; font-size:0.75rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; padding:0.4rem 1rem; }
+
+    /* ── MENU PAGE ── */
+    .menu-hero { background:var(--dark); padding:7rem 2.5rem 3rem; border-bottom:1px solid var(--border); }
+    .menu-tabs { display:flex; gap:0; margin:0 0 0; border-bottom:2px solid var(--border); overflow-x:auto; background:var(--dark); position:sticky; top:64px; z-index:100; }
+    .menu-tab { font-family:'Barlow Condensed',sans-serif; font-size:0.85rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; padding:1rem 1.5rem; cursor:pointer; color:var(--muted); border-bottom:3px solid transparent; margin-bottom:-2px; background:none; border-top:none; border-left:none; border-right:none; white-space:nowrap; transition:color 0.2s; }
+    .menu-tab:hover { color:var(--light); }
+    .menu-tab.active { color:var(--red); border-bottom-color:var(--red); }
+    .menu-panel { display:none; padding:2rem 2.5rem; max-width:1060px; margin:0 auto; }
+    .menu-panel.active { display:block; }
+    .menu-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:1px; background:var(--border); }
+    .menu-item { background:var(--panel); padding:1.4rem 1.6rem; display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; transition:background 0.2s; }
+    .menu-item:hover { background:#252525; }
+    .menu-item-info { flex:1; }
+    .menu-item-name { font-family:'Barlow Condensed',sans-serif; font-size:1.05rem; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; }
+    .menu-item-desc { font-size:0.82rem; color:var(--muted); margin-top:0.2rem; font-weight:300; }
+    .menu-item-badge { font-size:0.65rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--red); border:1px solid var(--red); padding:0.15rem 0.4rem; margin-left:0.5rem; vertical-align:middle; font-weight:700; }
+    .menu-item-price { font-family:'Barlow Condensed',sans-serif; font-size:1.25rem; font-weight:700; color:var(--yellow); white-space:nowrap; }
+    .menu-cat-title { font-family:'Barlow Condensed',sans-serif; font-size:0.7rem; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:var(--red); padding:1.4rem 0 0.6rem; border-top:1px solid var(--border); margin-top:1.8rem; }
+    .menu-cat-title:first-child { border-top:none; margin-top:0; }
+    .menu-note { font-size:0.78rem; color:var(--muted); margin-top:1.5rem; font-style:italic; }
+
+    /* ── LASER PAGE ── */
+    .laser-hero { position:relative; min-height:60vh; display:flex; align-items:flex-end; overflow:hidden; background:#050510; }
+    .laser-hero-bg { position:absolute; inset:0; background-image:url('https://images.unsplash.com/photo-1511882150382-421056c89033?w=1800&q=80'); background-size:cover; background-position:center; filter:brightness(0.4) saturate(1.6) hue-rotate(200deg); }
+    .laser-hero-content { position:relative; z-index:1; padding:0 2.5rem 4rem; }
+    .laser-hero-content .hero-tag { background:#5B2BE8; }
+    .laser-hero-content h1 { font-family:'Barlow Condensed',sans-serif; font-size:clamp(3rem,8vw,6rem); font-weight:800; line-height:0.92; text-transform:uppercase; }
+    .laser-hero-content h1 span { color:#9B6FFF; }
+    .laser-hero-content p { font-size:1rem; font-weight:300; color:rgba(240,237,232,0.65); max-width:480px; margin:1rem 0 2rem; }
+    .price-cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1px; background:var(--border); margin-top:2.5rem; }
+    .price-card { background:var(--panel); padding:2rem; text-align:center; }
+    .price-card .age { font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:0.5rem; }
+    .price-card .price { font-family:'Barlow Condensed',sans-serif; font-size:3rem; font-weight:800; color:#9B6FFF; line-height:1; }
+    .price-card .price sup { font-size:1.3rem; vertical-align:top; margin-top:0.5rem; }
+    .price-card .who { font-size:0.83rem; color:var(--muted); margin-top:0.5rem; font-weight:300; }
+    .how-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1.5rem; margin-top:2.5rem; }
+    .how-card { background:var(--panel); padding:1.8rem; border-top:3px solid #5B2BE8; }
+    .how-step { font-family:'Barlow Condensed',sans-serif; font-size:2.5rem; font-weight:800; color:#5B2BE8; line-height:1; margin-bottom:0.5rem; }
+    .how-card h4 { font-family:'Barlow Condensed',sans-serif; font-size:1rem; font-weight:700; text-transform:uppercase; margin-bottom:0.4rem; }
+    .how-card p { font-size:0.85rem; color:var(--muted); font-weight:300; line-height:1.65; }
+    .laser-stats { display:flex; gap:0; background:var(--panel); }
+    .laser-stat { flex:1; padding:2rem; text-align:center; border-left:1px solid var(--border); }
+    .laser-stat:first-child { border-left:none; }
+    .laser-stat .num { font-family:'Barlow Condensed',sans-serif; font-size:2.5rem; font-weight:800; color:#9B6FFF; }
+    .laser-stat .lbl { font-size:0.72rem; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); margin-top:0.3rem; }
+
+    /* ── CAFE PAGE ── */
+    .cafe-hero { position:relative; min-height:55vh; display:flex; align-items:flex-end; overflow:hidden; }
+    .cafe-hero-bg { position:absolute; inset:0; background-image:url('https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=1800&q=80'); background-size:cover; background-position:center 60%; }
+    .cafe-hero-bg::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg,rgba(13,13,13,0.2) 0%,rgba(13,13,13,0.85) 80%,rgba(13,13,13,1) 100%); }
+    .cafe-hero-content { position:relative; z-index:1; padding:0 2.5rem 4rem; }
+    .cafe-hero-content .hero-tag { background:#6B4C2A; }
+    .cafe-hero-content h1 { font-family:'Barlow Condensed',sans-serif; font-size:clamp(3rem,8vw,6rem); font-weight:800; line-height:0.92; text-transform:uppercase; }
+    .cafe-hero-content h1 span { color:#D4A853; }
+    .cafe-hero-content p { font-size:1rem; font-weight:300; color:rgba(240,237,232,0.65); max-width:480px; margin:1rem 0 2rem; }
+    .cafe-hours { display:flex; gap:0; background:var(--panel); flex-wrap:wrap; }
+    .cafe-hour { flex:1; min-width:160px; padding:1.8rem 2rem; border-left:1px solid var(--border); }
+    .cafe-hour:first-child { border-left:none; }
+    .cafe-hour .ch-label { font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase; color:#D4A853; font-weight:500; margin-bottom:0.5rem; }
+    .cafe-hour .ch-days { font-family:'Barlow Condensed',sans-serif; font-size:0.85rem; font-weight:700; text-transform:uppercase; color:var(--light); }
+    .cafe-hour .ch-time { font-family:'Barlow Condensed',sans-serif; font-size:1.3rem; font-weight:700; color:#fff; margin-top:0.2rem; }
+    .cafe-menu-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:1px; background:var(--border); margin-top:0; }
+    .cafe-item { background:var(--panel); padding:1.3rem 1.6rem; display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; }
+    .cafe-item:hover { background:#252525; }
+    .cafe-item-name { font-family:'Barlow Condensed',sans-serif; font-size:1rem; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; }
+    .cafe-item-desc { font-size:0.82rem; color:var(--muted); margin-top:0.2rem; font-weight:300; }
+    .cafe-item-price { font-family:'Barlow Condensed',sans-serif; font-size:1.2rem; font-weight:700; color:#D4A853; white-space:nowrap; }
+
+    /* ── LEGAL ── */
+    .legal-inner { max-width:740px; margin:0 auto; padding:7rem 2rem 5rem; }
+    .legal-inner h1 { font-family:'Barlow Condensed',sans-serif; font-size:2.5rem; font-weight:800; text-transform:uppercase; margin-bottom:0.4rem; }
+    .legal-inner .legal-meta { font-size:0.85rem; color:var(--muted); margin-bottom:2.5rem; padding-bottom:1.5rem; border-bottom:1px solid var(--border); }
+    .legal-inner h2 { font-family:'Barlow Condensed',sans-serif; font-size:1.1rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--red); margin:2.2rem 0 0.6rem; }
+    .legal-inner p, .legal-inner li { font-size:0.92rem; color:rgba(240,237,232,0.6); line-height:1.8; font-weight:300; }
+    .legal-inner ul { padding-left:1.4rem; margin-top:0.4rem; }
+    .legal-inner li { margin-bottom:0.3rem; }
+    .legal-inner a { color:var(--red); }
+    .legal-tabs { display:flex; gap:1rem; margin-bottom:2.5rem; flex-wrap:wrap; }
+    .legal-tab { font-family:'Barlow Condensed',sans-serif; font-size:0.8rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; padding:0.5rem 1.2rem; cursor:pointer; background:var(--panel); color:var(--muted); border:1px solid var(--border); transition:all 0.2s; }
+    .legal-tab.active { background:var(--red); color:#fff; border-color:var(--red); }
+    .legal-section { display:none; }
+    .legal-section.active { display:block; }
+
+    /* ── FOOTER ── */
+    footer { background:#080808; border-top:1px solid var(--border); padding:2rem 2.5rem; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:1rem; }
+    .footer-brand { display:flex; align-items:center; gap:0.8rem; }
+    .footer-text { line-height:1.2; }
+    .footer-text .ft-name { font-family:'Barlow Condensed',sans-serif; font-weight:700; font-size:0.9rem; letter-spacing:0.05em; text-transform:uppercase; color:rgba(240,237,232,0.4); }
+    .footer-text .ft-slogan { font-size:0.7rem; color:rgba(240,237,232,0.25); letter-spacing:0.1em; }
+    .footer-links { display:flex; gap:1.5rem; flex-wrap:wrap; }
+    .footer-links a { color:rgba(240,237,232,0.3); font-size:0.8rem; text-decoration:none; cursor:pointer; }
+    .footer-links a:hover { color:var(--red); }
+
+    /* ── SVG LOGO ── */
+    .logo-svg-sm { width:38px; height:38px; flex-shrink:0; opacity:0.75; }
+
+    /* ── DARK BAND ── */
+    .dark-band { background:var(--dark); }
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:768px){
+      nav { padding:0 1.2rem; }
+      .nav-links { display:none; position:fixed; top:64px; left:0; right:0; background:rgba(13,13,13,0.98); flex-direction:column; gap:0; border-bottom:1px solid var(--border); z-index:100; }
+      .nav-links.open { display:flex; }
+      .nav-links a { height:52px; line-height:52px; border-left:none; border-top:1px solid var(--border); padding:0 1.5rem; }
+      .nav-toggle { display:flex; }
+      .page-section { padding:3.5rem 1.2rem; }
+      .hero-content { padding:0 1.2rem 4rem; }
+      .hero-stats { display:none; }
+      .about-grid { grid-template-columns:1fr; gap:2rem; }
+      .about-img::before { display:none; }
+      .img-strip { grid-template-columns:1fr 1fr; height:220px; }
+      .img-strip img:first-child { grid-column:span 2; }
+      .contact-grid { grid-template-columns:1fr; }
+      .hours-flex { gap:1rem; }
+      .hour-col { border-left:none; border-top:1px solid rgba(255,255,255,0.2); padding:0.8rem 0; }
+      .hour-col:first-child { border-top:none; }
+      .menu-hero { padding:6rem 1.2rem 2rem; }
+      .menu-panel { padding:1.5rem 1.2rem; }
+      .laser-stats { flex-wrap:wrap; }
+      .laser-stat { min-width:50%; }
+      .cafe-hours { flex-direction:column; }
+      .cafe-hour { border-left:none; border-top:1px solid var(--border); }
+      .cafe-hour:first-child { border-top:none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════ NAV ══════════════ -->
+<nav>
+  <div class="nav-brand" onclick="goPage('home')">
+    <svg class="nav-logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="49" fill="#D72020"/>
+      <ellipse cx="50" cy="28" rx="30" ry="16" fill="rgba(255,255,255,0.18)"/>
+      <g transform="translate(72,18)" fill="white" opacity="0.9"><polygon points="0,-5 1.2,-1.2 5,0 1.2,1.2 0,5 -1.2,1.2 -5,0 -1.2,-1.2"/></g>
+      <text x="50" y="40" text-anchor="middle" font-family="Arial Narrow,Arial,sans-serif" font-weight="700" font-size="16" fill="#8DC63F" letter-spacing="0.5">sport's</text>
+      <text x="50" y="62" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="26" fill="#1B6FBB" letter-spacing="-0.5">ARENA</text>
+      <text x="50" y="76" text-anchor="middle" font-family="Arial,sans-serif" font-weight="400" font-size="10" fill="white" letter-spacing="0.3">food &amp; fun</text>
+    </svg>
+    <div class="nav-brand-tagline">
+      <span class="brand-main">Sport's Arena</span>
+      <span class="brand-sub">hear, feel, have fun!</span>
+    </div>
+  </div>
+  <ul class="nav-links" id="navLinks">
+    <li><a onclick="goPage('home');closeNav()" data-page="home">Home</a></li>
+    <li><a onclick="goPage('menu');closeNav()" data-page="menu">Speisekarte</a></li>
+    <li><a onclick="goPage('laser');closeNav()" data-page="laser">Lasergame</a></li>
+    <li><a onclick="goPage('cafe');closeNav()" data-page="cafe">Caffè</a></li>
+    <li><a onclick="goPage('home');closeNav();setTimeout(()=>document.getElementById('kontakt').scrollIntoView({behavior:'smooth'}),100)" class="nav-cta">Kontakt</a></li>
+  </ul>
+  <div class="nav-toggle" id="navToggle" onclick="toggleNav()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════
+     PAGE: HOME
+══════════════════════════════════════ -->
+<div class="page active" id="page-home">
+
+  <!-- HERO -->
+  <section class="hero" style="padding:0;">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <div class="hero-tag">Reischach · Am Fuß des Kronplatzes</div>
+      <svg width="90" height="90" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="display:block;margin-bottom:1.4rem;filter:drop-shadow(0 4px 16px rgba(0,0,0,0.6));">
+        <circle cx="50" cy="50" r="49" fill="#D72020"/>
+        <circle cx="50" cy="50" r="49" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+        <ellipse cx="50" cy="26" rx="32" ry="18" fill="rgba(255,255,255,0.15)"/>
+        <g transform="translate(74,17)" fill="white" opacity="0.95"><polygon points="0,-6 1.4,-1.4 6,0 1.4,1.4 0,6 -1.4,1.4 -6,0 -1.4,-1.4"/></g>
+        <text x="50" y="40" text-anchor="middle" font-family="Arial Narrow,Arial,sans-serif" font-weight="700" font-size="16" fill="#8DC63F" letter-spacing="0.5">sport's</text>
+        <text x="50" y="63" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="28" fill="#1B6FBB" letter-spacing="-0.5">ARENA</text>
+        <text x="50" y="78" text-anchor="middle" font-family="Arial,sans-serif" font-weight="400" font-size="10.5" fill="white" letter-spacing="0.3">food &amp; fun</text>
+      </svg>
+      <h1>Hear.<br><span>Feel.</span><br>Have Fun!</h1>
+      <p class="hero-sub">American Sports Bar, Billiard, Dart & Lasergame — Seit 2002 der Treffpunkt für Sport und gute Stimmung in Bruneck.</p>
+      <div class="hero-actions">
+        <a class="btn-primary" onclick="goPage('menu')">Zur Speisekarte</a>
+        <a class="btn-outline" onclick="goPage('laser')">Lasergame buchen</a>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">1000</div><div class="stat-label">m² Fläche</div></div>
+      <div class="stat"><div class="stat-num">15</div><div class="stat-label">Flatscreens</div></div>
+      <div class="stat"><div class="stat-num">5</div><div class="stat-label">Billardtische</div></div>
+      <div class="stat"><div class="stat-num">2002</div><div class="stat-label">Gegründet</div></div>
+    </div>
+  </section>
+
+  <!-- BILD-STRIP -->
+  <div class="img-strip">
+    <img src="https://images.unsplash.com/photo-1571091718767-18b5b1457add?w=900&q=80" alt="Burger"/>
+    <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=500&q=80" alt="Sports Bar"/>
+    <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500&q=80" alt="Caffe"/>
+  </div>
+
+  <!-- ÜBER UNS -->
+  <section class="page-section dark-band" id="ueber">
+    <div class="container" style="padding-top:5rem;">
+      <div class="about-grid">
+        <div class="about-img" style="margin-left: -40mm ; margin-right: -40mm;" >
+          <br>
+          <img src="https://images.unsplash.com/photo-1599685315659-bc876da49fe5?q=80&w=1770&auto=format&fit=crop" alt="Billiard" loading="lazy" style="margin-left: -40mm ;"/>
+        </div>
+        <div>
+          <br>
+          <br>
+          <p class="sec-label">Über uns</p>
+          <br>
+          <h2 class="sec-title">Die #1 Sports Bar der Region</h2>
+          <p class="sec-body">Seit 2002 sind wir der Anlaufpunkt für alle, die Sport, gutes Essen und echte Atmosphäre lieben. Auf rund 1000 m² bieten wir alles, was das Herz begehrt.</p>
+          <div class="feature-list">
+            <div class="feature-item">
+              <div class="feature-icon">TV</div>
+              <div class="feature-text"><h4>Live Sport</h4><p>15 Flatscreens + Großbildleinwand — Serie A, Bundesliga, Premier League & alle Europacup-Spiele</p></div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon">B</div>
+              <div class="feature-text"><h4>Unterhaltung satt</h4><p>5 Billardtische, Softdart & Steeldart, Kicker, Videogames, Airhockey</p></div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon">F</div>
+              <div class="feature-text"><h4>American Food</h4><p>Hausgemachte Burger, Spareribs, Chickenwings, Salate — frisch & auf den Punkt</p></div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon">W</div>
+              <div class="feature-text"><h4>Sportwetten</h4><p>Sportwetten mit unserem Partner Intralot — direkt vor Ort abgeben</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EVENTS -->
+  <section class="page-section" id="events">
+    <div class="container">
+      <p class="sec-label">Was geht ab</p>
+      <h2 class="sec-title">Events & Entertainment</h2>
+      <div class="events-grid">
+        <div class="event-card"><h3>Live Sport</h3><p>Alle großen Spiele auf 15 Flatscreens und unserer Großleinwand — Serie A, Bundesliga, Champions League, Premier League und mehr.</p><div class="event-time">Di – Sa ab 18:00 Uhr</div></div>
+        <div class="event-card"><h3>Dart-Turniere</h3><p>Regelmäßige Soft- und Steeldart-Turniere im eigenen Dartraum. Anmeldung telefonisch oder direkt vor Ort.</p><div class="event-time">Monatlich · Termine auf Anfrage</div></div>
+        <div class="event-card"><h3>Billard Nights</h3><p>5 Profi-Billardtische stehen täglich bereit. Eigene Turniere und offene Spielabende — für Anfänger und Könner.</p><div class="event-time">Täglich geöffnet</div></div>
+        <div class="event-card"><h3>Lasergame</h3><p>Spannendes Live-Gaming auf 350 m² — taktisch, sportlich, unvergesslich. Ideal für Gruppen & Geburtstage.</p><div class="event-time">Reservierung: +39 348 488 87 44</div></div>
+        <div class="event-card"><h3>Party Nights</h3><p>Regelmäßige Party-Abende mit Live-DJs, Drink-Specials und der besten Stimmung der Region.</p><div class="event-time">Freitags & Samstags</div></div>
+        <div class="event-card"><h3>Sportwetten</h3><p>Tippe auf deine Lieblingsteams — direkt vor Ort mit unserem Partner Intralot.</p><div class="event-time">Di – Sa ab 18:00 Uhr</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ÖFFNUNGSZEITEN PUB -->
+  <section class="page-section hours-section">
+    <div class="container">
+      <p class="sec-label">Pub · Wann wir da sind</p>
+      <h2 class="sec-title">Öffnungszeiten</h2>
+      <div class="hours-flex">
+        <div class="hour-col closed"><div class="hour-day">Montag</div><div class="hour-time">Geschlossen</div></div>
+        <div class="hour-col"><div class="hour-day">Dienstag</div><div class="hour-time">18:00 – 24:00</div></div>
+        <div class="hour-col"><div class="hour-day">Mittwoch</div><div class="hour-time">18:00 – 24:00</div></div>
+        <div class="hour-col"><div class="hour-day">Donnerstag</div><div class="hour-time">18:00 – 24:00</div></div>
+        <div class="hour-col"><div class="hour-day">Freitag</div><div class="hour-time">18:00 – 01:00</div></div>
+        <div class="hour-col"><div class="hour-day">Samstag</div><div class="hour-time">12:00 – 01:00</div></div>
+        <div class="hour-col"><div class="hour-day">Sonntag</div><div class="hour-time">12:00 – 24:00</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- KONTAKT -->
+  <section class="page-section" id="kontakt">
+    <div class="container">
+      <p class="sec-label">Finden Sie uns</p>
+      <h2 class="sec-title">Kontakt & Anfahrt</h2>
+      <div class="contact-grid">
+        <div>
+          <div class="contact-block">
+            <h3>Adresse</h3>
+            <div class="contact-row"><span>Harrasserstraße 1 / Via Harrasser 1<br>39031 Reischach / Bruneck (BZ)<br>Südtirol, Italien</span></div>
+          </div>
+          <div class="contact-block" style="margin-top:2rem;">
+            <h3>Kontakt</h3>
+            <div class="contact-row"><span>Telefon:</span><a href="tel:+390474413600">+39 0474 413 600</a></div>
+            <div class="contact-row"><span>Alternativ:</span><a href="tel:+390474554293">+39 0474 554 293</a></div>
+            <div class="contact-row"><span>E-Mail:</span><a href="mailto:info@sports-arena.eu">info@sports-arena.eu</a></div>
+          </div>
+          <div class="contact-block" style="margin-top:2rem;">
+            <h3>Online</h3>
+            <div class="contact-row"></div>
+            <div class="contact-row"><a href="https://www.facebook.com/Sportsarena.eu" target="_blank">Facebook: Sport's Arena</a></div>
+          </div>
+        </div>
+        <div>
+          <div class="map-placeholder">
+            <img src="https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?w=800&q=70" alt="Karte"/>
+            <div class="map-pin">Harrasserstraße 1 · Reischach</div>
+          </div>
+          <p style="font-size:0.8rem;color:var(--muted);margin-top:0.8rem;">Am Fuß des Kronplatzes · Kostenloser Parkplatz vorhanden</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /page-home -->
+
+
+<!-- ══════════════════════════════════
+     PAGE: SPEISEKARTE
+══════════════════════════════════════ -->
+<div class="page" id="page-menu">
+
+  <div class="menu-hero">
+    <div class="container">
+      <p class="sec-label">American Food at its best</p>
+      <h1 class="sec-title" style="font-size:clamp(2.5rem,6vw,4rem);">Speisekarte</h1>
+      <p class="sec-body">Hausgemacht, frisch, echt — alle Preise inkl. MwSt. Kein Ruhetag beim Essen.</p>
+    </div>
+  </div>
+
+  <div class="menu-tabs" id="menuTabs">
+    <button class="menu-tab" ></button>
+    <button class="menu-tab" ></button>
+    <button class="menu-tab active" onclick="switchTab('burger')">Burger</button>
+    <button class="menu-tab" onclick="switchTab('starters')">Starters</button>
+    <button class="menu-tab" onclick="switchTab('wraps')">Wraps & Salads</button>
+    <button class="menu-tab" onclick="switchTab('pizza')">Pizza</button>
+    <button class="menu-tab" onclick="switchTab('steak')">Steak-House</button>
+    <button class="menu-tab" onclick="switchTab('bier')">Wines & Beers</button>
+    <button class="menu-tab" onclick="switchTab('cocktails')">Cocktails & Digestivs</button>
+    <button class="menu-tab" onclick="switchTab('softdrinks')">Softdrinks</button>
+    <button class="menu-tab" onclick="switchTab('heiss')">Coffee & Hot Drinks</button>
+  </div>
+
+  <!-- BURGER -->
+  <div class="menu-panel active" id="panel-burger">
+    <p class="menu-cat-title">Burger im hausgemachten Burgerbrot</p>
+    <div class="menu-grid">
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Black Edition Burger</div><div class="menu-item-desc">160 gr. Rindfleisch, Tomino Käse, Salat, Tomaten, knusprige Zwiebeln. Inside: BBQ Sauce — hausgemachtes schwarzes Burgerbrot</div></div><div class="menu-item-price">€ 13,50</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Chicken Burger</div><div class="menu-item-desc">200 gr. saftig gebratener Panko-Hühnerbrust, Tomaten, Salat, Zwiebeln. Inside: BBQ Sauce</div></div><div class="menu-item-price">€ 11,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Arena Burger</div><div class="menu-item-desc">160 gr. Rindfleisch, Tomaten, Salat, Zwiebeln. Inside: BBQ Sauce</div></div><div class="menu-item-price">€ 11,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Cheese Burger 2.0</div><div class="menu-item-desc">160 gr. Rindfleisch, Pecorino Romano, Brie, Tomaten, Salat, Gurken. Inside: BBQ Sauce</div></div><div class="menu-item-price">€ 11,50</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Country Burger</div><div class="menu-item-desc">160 gr. Rindfleisch, Speck, Tomaten, Salat, Zwiebeln. Inside: Senf Sauce</div></div><div class="menu-item-price">€ 11,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Mediterran Burger</div><div class="menu-item-desc">160 gr. Rindfleisch, Raukensalat, Tomaten, Büffelmozzarella. Inside: Basilikumpesto</div></div><div class="menu-item-price">€ 13,50</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Chili Burger</div><div class="menu-item-desc">160 gr. Rindfleisch, Tomaten, Salat, Gurken. Inside: Chili Sauce</div></div><div class="menu-item-price">€ 11,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Parmigiana Burger</div><div class="menu-item-desc">Tempura-Auberginen, Stracciatella, Tomatensauce, frischem Basilikum. Inside: Basilikumpesto</div></div><div class="menu-item-price">€ 12,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Veggie Burger 2.0<span class="menu-item-badge">Veg</span></div><div class="menu-item-desc">Im Ciabatta Brot, Salat, Tomaten, gegrillte Zucchini, Burrata, Basilikumpesto</div></div><div class="menu-item-price">€ 12,50</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">One kg<span class="menu-item-badge">XXL</span></div><div class="menu-item-desc">160 gr. Rindfleisch, 200 gr. 100% Chianina Fleisch vom Landmannhof am Ritten, Pulled Pork, Coleslaw, Tomaten, Salat, Zwiebeln, Brie, Speck</div></div><div class="menu-item-price">€ 18,90</div></div>
+    </div>
+    <p class="menu-cat-title">Chianina Burger — grilled medium</p>
+    <div class="menu-grid">
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Black Chianina</div><div class="menu-item-desc">200 gr. 100% Chianinafleisch vom Landmannhof am Ritten im schwarzen Burgerbrot, Rucola, Tomaten und Burrata</div></div><div class="menu-item-price">€ 14,50</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Chianina Burger</div><div class="menu-item-desc">200 gr. 100% Chianina Fleisch vom Landmannhof am Ritten im Ciabatta Brot, Rucola, Tomaten und Zwiebel</div></div><div class="menu-item-price">€ 13,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Smoked Chianina</div><div class="menu-item-desc">200 gr. 100% Chianina Fleisch vom Landmannhof am Ritten im Ciabatta Brot, Salat, Strauchtomaten, Parmesanraspel und Tiaggiasca Oliven. Inside: Räuchersauce</div></div><div class="menu-item-price">€ 14,00</div></div>
+    </div>
+    <p class="menu-cat-title">Burger im Ciabatta Brot</p>
+    <div class="menu-grid">
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Tiroler Burger</div><div class="menu-item-desc">160 gr. saftig gebratenem, einheimischen Rindfleisch, Tomaten, Salat, Spiegelei, Bacon, Zwiebeln. Inside: BBQ Sauce</div></div><div class="menu-item-price">€ 13,50</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Pulled Pork Burger</div><div class="menu-item-desc">200 gr. gezupftem Schweinefleisch, Coleslaw</div></div><div class="menu-item-price">€ 11,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Pulled Pork 2.0</div><div class="menu-item-desc">200 gr. gezupftem Schweinefleisch, Tomaten, Salat, Zwiebeln und Burrata</div></div><div class="menu-item-price">€ 12,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Salmon Burger</div><div class="menu-item-desc">Mit frischem Lachs, Salat, Kirschtomaten, Zitrone. Inside: Kräutersauce</div></div><div class="menu-item-price">€ 13,50</div></div>
+    </div>
+    <p class="menu-cat-title">Beilagen / Side Dishes</p>
+    <div class="menu-grid">
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Pommes frites</div><div class="menu-item-desc">French fries</div></div><div class="menu-item-price">€ 4,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Sweet potato fries</div></div><div class="menu-item-price">€ 5,50</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Baked patatoes</div></div><div class="menu-item-price">€ 4,50</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Patato Crispers</div></div><div class="menu-item-price">€ 4,50</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Gemischter Salat</div><div class="menu-item-desc">Mixed salad</div></div><div class="menu-item-price">€ 5,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Coleslaw</div></div><div class="menu-item-price">€ 4,00</div></div>
+    </div>
+    <p class="menu-cat-title">Saucen / Sauces</p>
+    <div class="menu-grid">
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Knoblauch-Mayonnaise</div><div class="menu-item-desc">Garlic-Mayonnaise</div></div><div class="menu-item-price">€ 1,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Cocktail</div></div><div class="menu-item-price">€ 1,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Kräuter-Frischkäse-Dip</div><div class="menu-item-desc">Herbs fresh cheese dip</div></div><div class="menu-item-price">€ 1,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Arena Sauce</div></div><div class="menu-item-price">€ 1,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Thai</div></div><div class="menu-item-price">€ 1,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Ketchup</div></div><div class="menu-item-price">€ 0,80</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Mayonnaise</div></div><div class="menu-item-price">€ 0,80</div></div>
+    </div>
+    <p class="menu-note">Weitere Extras / altri ingredienti / other ingredients: € 0,50 – 4,00</p>
+  </div>
+
+  <!-- STARTERS -->
+  <div class="menu-panel" id="panel-starters">
+    <p class="menu-cat-title">Starters – at any time! (5 / 8 / 12 Stück)</p>
+    <div class="menu-grid">
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Zwiebelringe</div><div class="menu-item-desc">Onion rings mit Thai Sauce — 5 / 8 / 12 Stück</div></div><div class="menu-item-price">€ 6,00 / 8,80 / 12,50</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Chicken Wings</div><div class="menu-item-desc">Gebackene Chicken Wings mit Thai Sauce — 5 / 8 / 12 Stück</div></div><div class="menu-item-price">€ 7,00 / 10,90 / 16,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Überbackene Krabben</div><div class="menu-item-desc">Scalloped Shrimp mit Thai Sauce — 5 / 8 / 12 Stück</div></div><div class="menu-item-price">€ 7,00 / 10,90 / 16,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Nuggy's</div><div class="menu-item-desc">Gebackene Panko Truthahn Nuggy's mit pikanter Arena Sauce — 5 / 8 / 12 Stück</div></div><div class="menu-item-price">€ 7,50 / 11,60 / 17,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Mozzarella Sticks</div><div class="menu-item-desc">Gebackene Mozzarellastangen mit Thai Sauce — 5 / 8 / 12 Stück</div></div><div class="menu-item-price">€ 7,50 / 11,60 / 17,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Combo Starters<span class="menu-item-badge">2/3</span></div><div class="menu-item-desc">Wähle drei Starters plus eine Art Kartoffeln und zwei Saucen nach Wahl. Bei 4. Starter statt Kartoffelbeilage: Aufpreis € 2,00</div></div><div class="menu-item-price">€ 13,50</div></div>
+    </div>
+    <p class="menu-cat-title">Pommes & Beilagen</p>
+    <div class="menu-grid">
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Pommes frites</div><div class="menu-item-desc">French fries — 2 / 3</div></div><div class="menu-item-price">€ 5,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Baked potato</div><div class="menu-item-desc">Gebackene Kartoffelspalten mit Kräuter-Frischkäse-Dip — 2 / 3</div></div><div class="menu-item-price">€ 5,50</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Potato Crispers</div><div class="menu-item-desc">Mit Cocktail Sauce — 2 / 3</div></div><div class="menu-item-price">€ 5,50</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Süßkartoffel Pommes</div><div class="menu-item-desc">Mit Knoblauch-Mayonnaise — 2 / 3</div></div><div class="menu-item-price">€ 5,50</div></div>
+    </div>
+    <p class="menu-cat-title">Saucen / Sauces</p>
+    <div class="menu-grid">
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Knoblauch-Mayonnaise</div></div><div class="menu-item-price">€ 1,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Cocktail</div></div><div class="menu-item-price">€ 1,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Kräuter-Frischkäse-Dip</div></div><div class="menu-item-price">€ 1,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Arena Sauce</div></div><div class="menu-item-price">€ 1,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Thai</div></div><div class="menu-item-price">€ 1,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Ketchup</div></div><div class="menu-item-price">€ 0,80</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Mayonnaise</div></div><div class="menu-item-price">€ 0,80</div></div>
+    </div>
+    <p class="menu-note">Weitere Extras / altri ingredienti / other ingredients: € 0,50 – 4,00</p>
+  </div>
+
+  <!-- WRAPS & SALADS -->
+  <div class="menu-panel" id="panel-wraps">
+    <p class="menu-cat-title">Wraps</p>
+    <div class="menu-grid">
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Greek Wrap</div><div class="menu-item-desc">Weizenfladen mit Salat, Tomaten, Zwiebel, Peperonistreifen, Feta mit pikanter Arena Sauce und Kräuter-Frischkäse-Dip</div></div><div class="menu-item-price">€ 10,90</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">England Wrap</div><div class="menu-item-desc">Weizenfladen mit Salat, Tomaten, Zwiebel, Truthahnstreifen vom Grill mit Kräuter-Frischkäse-Dip und pikanter Arena Sauce</div></div><div class="menu-item-price">€ 10,90</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">German Wrap</div><div class="menu-item-desc">Weizenfladen mit Salat, Tomaten, Zwiebel, Speck, Truthahn Nuggy's mit pikanter Arena Sauce und Kräuter-Frischkäse-Dip</div></div><div class="menu-item-price">€ 10,90</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Pulled Wrap</div><div class="menu-item-desc">Weizenfladen mit Pulled Pork, Coleslaw, Salat</div></div><div class="menu-item-price">€ 10,90</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Chimichurri Wrap<span class="menu-item-badge">Vegan</span></div><div class="menu-item-desc">A healthy and conscious alternative — High Protein</div></div><div class="menu-item-price">€ 10,90</div></div>
+    </div>
+    <p class="menu-cat-title">Salads with focaccia bread</p>
+    <div class="menu-grid">
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Salmon Salat</div><div class="menu-item-desc">Mit frischem Lachsfiletstück, Avocado, verschiedenen Blattsalaten, Strauchtomaten</div></div><div class="menu-item-price">€ 14,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Griechischer Salat</div><div class="menu-item-desc">Mit Feta, schwarzen Oliven, verschiedenen Blattsalaten, Strauchtomaten</div></div><div class="menu-item-price">€ 12,90</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Grilled Turkey Salat</div><div class="menu-item-desc">Mit gegrilltem Truthahn, verschiedenen Blattsalaten, Strauchtomaten</div></div><div class="menu-item-price">€ 12,90</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Turkey Salat</div><div class="menu-item-desc">Mit Truthahnnuggys, verschiedenen Blattsalaten, Strauchtomaten</div></div><div class="menu-item-price">€ 12,90</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Chimichurry Salad<span class="menu-item-badge">Vegan</span></div><div class="menu-item-desc">Mit Focaccia bread — verschiedene Blattsalate, Strauchtomaten und Chimichurri. High Protein</div></div><div class="menu-item-price">€ 12,90</div></div>
+    </div>
+    <p class="menu-cat-title">Beilagen / Side Dishes</p>
+    <div class="menu-grid">
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Pommes frites</div><div class="menu-item-desc">French fries</div></div><div class="menu-item-price">€ 4,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Sweet potato fries</div></div><div class="menu-item-price">€ 5,50</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Baked patatoes</div></div><div class="menu-item-price">€ 4,50</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Patato Crispers</div></div><div class="menu-item-price">€ 4,50</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Gemischter Salat</div><div class="menu-item-desc">Mixed salad</div></div><div class="menu-item-price">€ 5,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Coleslaw</div></div><div class="menu-item-price">€ 4,00</div></div>
+    </div>
+    <p class="menu-cat-title">Saucen / Sauces</p>
+    <div class="menu-grid">
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Knoblauch-Mayonnaise</div></div><div class="menu-item-price">€ 1,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Cocktail</div></div><div class="menu-item-price">€ 1,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Kräuter-Frischkäse-Dip</div></div><div class="menu-item-price">€ 1,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Arena Sauce</div></div><div class="menu-item-price">€ 1,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Thai</div></div><div class="menu-item-price">€ 1,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Ketchup</div></div><div class="menu-item-price">€ 0,80</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Mayonnaise</div></div><div class="menu-item-price">€ 0,80</div></div>
+    </div>
+    <p class="menu-note">Di–Sa / Mar–Sab / Tue–Sat: 18:00–23:00 h · So / Dom / Sun: 12:00–14:00, 18:00–23:00 h</p>
+  </div>
+
+  <!-- PIZZA -->
+  <div class="menu-panel" id="panel-pizza">
+    <p class="menu-cat-title">Pizza special</p>
+    <div class="menu-grid">
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Sport's Arena</div><div class="menu-item-desc">Focaccia mit Rucola, Kirschtomaten, Grana Padano DOP, Burrata</div></div><div class="menu-item-price">€ 14,50</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Salmon</div><div class="menu-item-desc">Mozzarella, frischer Lachs, Stracciatella, Basilikum-Pesto, Kirschtomaten</div></div><div class="menu-item-price">€ 15,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Trevigiana</div><div class="menu-item-desc">Geräucherter Provola, Radicchio, Gorgonzola, Speck</div></div><div class="menu-item-price">€ 14,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Raffo</div><div class="menu-item-desc">Mozzarella Burrata, Pistazien-Streusel, Pistazien-Pesto, Mortadella, Basilikum</div></div><div class="menu-item-price">€ 16,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Calzone</div><div class="menu-item-desc">Mozzarella, Pilze, Schinken</div></div><div class="menu-item-price">€ 12,00</div></div>
+    </div>
+    <p class="menu-cat-title">Pizza</p>
+    <div class="menu-grid">
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Marinara</div><div class="menu-item-desc">San-Marzano-Tomate, Knoblauch, Origano</div></div><div class="menu-item-price">€ 7,50</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Margherita</div><div class="menu-item-desc">San-Marzano-Tomate, Mozzarella, Basilikum</div></div><div class="menu-item-price">€ 9,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Napoli</div><div class="menu-item-desc">San-Marzano-Tomate, Mozzarella, Sardellen</div></div><div class="menu-item-price">€ 9,50</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Bufalina</div><div class="menu-item-desc">San-Marzano-Tomate, Büffelmozzarella, Basilikum</div></div><div class="menu-item-price">€ 12,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Diavola</div><div class="menu-item-desc">San-Marzano-Tomate, Mozzarella, Ventricina Salami, scharfe Salami, Peperoni Lombardi</div></div><div class="menu-item-price">€ 12,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Funghi</div><div class="menu-item-desc">San-Marzano-Tomate, Mozzarella, frische Champignons</div></div><div class="menu-item-price">€ 10,50</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Parma</div><div class="menu-item-desc">San-Marzano-Tomate, Mozzarella, Rohschinken Parma DOP, Philadelphia</div></div><div class="menu-item-price">€ 13,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Regina</div><div class="menu-item-desc">San-Marzano-Tomate, Mozzarella, Schinken, frische Champignons</div></div><div class="menu-item-price">€ 11,50</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Tonnarella</div><div class="menu-item-desc">San-Marzano-Tomate, Mozzarella, Thunfisch, Zwiebel</div></div><div class="menu-item-price">€ 12,50</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Capricciosa</div><div class="menu-item-desc">San-Marzano-Tomate, Mozzarella, frische Pilze, Artischocken, Oliven, Schinken</div></div><div class="menu-item-price">€ 13,50</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Zingara</div><div class="menu-item-desc">San-Marzano-Tomate, Mozzarella, Ventricina Salami, frische Pilze, Gorgonzola</div></div><div class="menu-item-price">€ 13,50</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Parmigiana</div><div class="menu-item-desc">San-Marzano-Tomate, Mozzarella, Auberginen, Grana Padano DOP</div></div><div class="menu-item-price">€ 13,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Xändi</div><div class="menu-item-desc">San-Marzano-Tomate, Mozzarella, Spinat, Rohschinken Parma DOP, Burrata, scharfe Salami</div></div><div class="menu-item-price">€ 14,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Mais</div><div class="menu-item-desc">San-Marzano-Tomate, Mozzarella, Schinken, Mais</div></div><div class="menu-item-price">€ 12,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Contadina</div><div class="menu-item-desc">San-Marzano-Tomate, Mozzarella, Ei, Speck, Zwiebel</div></div><div class="menu-item-price">€ 13,50</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Buongustaia</div><div class="menu-item-desc">San-Marzano-Tomate, Mozzarella, Pfifferlinge, Gorgonzola, scharfe Salami</div></div><div class="menu-item-price">€ 13,00</div></div>
+    </div>
+    <p class="menu-cat-title">White Pizza</p>
+    <div class="menu-grid">
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Primavera</div><div class="menu-item-desc">Mozzarella, Rauke, Kirschtomaten, Grana Padano DOP</div></div><div class="menu-item-price">€ 11,50</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">5 formaggi</div><div class="menu-item-desc">Mozzarella, Gorgonzola, Emmenthal, Pecorino Romano DOP, Grana Padano DOP</div></div><div class="menu-item-price">€ 14,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Vegetariana</div><div class="menu-item-desc">Mozzarella, Auberginen, Zucchini, Peperoni</div></div><div class="menu-item-price">€ 12,50</div></div>
+    </div>
+    <p class="menu-note">Weitere Extras / altri ingredienti / other ingredients: € 0,50 – 4,00 · Di–Sa / Mar–Sab / Tue–Sat: 18:00–23:00 h · So / Dom / Sun: 12:00–14:00, 18:00–23:00 h</p>
+  </div>
+
+  <!-- STEAK-HOUSE -->
+  <div class="menu-panel" id="panel-steak">
+    <p class="menu-cat-title">Starters</p>
+    <div class="menu-grid">
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Pommes frites</div><div class="menu-item-desc">French fries — 2 / 3</div></div><div class="menu-item-price">€ 5,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Baked potato</div><div class="menu-item-desc">Gebackene Kartoffelspalten mit Kräuter-Frischkäse-Dip — 2 / 3</div></div><div class="menu-item-price">€ 5,50</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Potato Crispers</div><div class="menu-item-desc">Mit Cocktail Sauce — 2 / 3</div></div><div class="menu-item-price">€ 5,50</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Süßkartoffel Pommes</div><div class="menu-item-desc">Mit Knoblauch-Mayonnaise — 2 / 3</div></div><div class="menu-item-price">€ 5,50</div></div>
+    </div>
+    <p class="menu-cat-title">Steak-House</p>
+    <div class="menu-grid">
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Tagliata vom Rind<span class="menu-item-badge">Signature</span></div><div class="menu-item-desc">Mit Beilage nach Wahl, auf Raukebeet und Strauchtomaten mit Parmesanraspel und Balsamico Creme</div></div><div class="menu-item-price">€ 25,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Spareribs</div><div class="menu-item-desc">Mit Beilage nach Wahl</div></div><div class="menu-item-price">€ 22,00</div></div>
+    </div>
+    <p class="menu-cat-title">Beilagen / Side Dishes</p>
+    <div class="menu-grid">
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Pommes frites</div><div class="menu-item-desc">French fries</div></div><div class="menu-item-price">€ 4,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Sweet potato fries</div></div><div class="menu-item-price">€ 5,50</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Baked patatoes</div></div><div class="menu-item-price">€ 4,50</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Patato Crispers</div></div><div class="menu-item-price">€ 4,50</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Gemischter Salat</div><div class="menu-item-desc">Mixed salad</div></div><div class="menu-item-price">€ 5,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Coleslaw</div></div><div class="menu-item-price">€ 4,00</div></div>
+    </div>
+    <p class="menu-cat-title">Saucen / Sauces</p>
+    <div class="menu-grid">
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Knoblauch-Mayonnaise</div></div><div class="menu-item-price">€ 1,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Cocktail</div></div><div class="menu-item-price">€ 1,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Kräuter-Frischkäse-Dip</div></div><div class="menu-item-price">€ 1,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Arena Sauce</div></div><div class="menu-item-price">€ 1,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Thai</div></div><div class="menu-item-price">€ 1,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Ketchup</div></div><div class="menu-item-price">€ 0,80</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Mayonnaise</div></div><div class="menu-item-price">€ 0,80</div></div>
+    </div>
+    <p class="menu-note">Di–Sa / Mar–Sab / Tue–Sat: 18:00–23:00 h · So / Dom / Sun: 12:00–14:00, 18:00–23:00 h</p>
+  </div>
+
+  <!-- WINES & BEERS -->
+  <div class="menu-panel" id="panel-bier">
+    <p class="menu-cat-title">Rotweine / vini rossi / red wine</p>
+    <div class="menu-grid">
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Glas Rotwein laut Angebot</div><div class="menu-item-desc">bicchiere di vino rosso secondo l'offerta / glass red wine according to offer</div></div><div class="menu-item-price">€ 4,00 – 7,00</div></div>
+    </div>
+    <p class="menu-cat-title">Weißweine / vini bianchi / white wine</p>
+    <div class="menu-grid">
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Prosecco</div></div><div class="menu-item-price">€ 4,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Glas Weißwein laut Angebot</div><div class="menu-item-desc">bicchiere di vino bianco secondo l'offerta / glass white wine according to offer</div></div><div class="menu-item-price">€ 4,00 – 7,00</div></div>
+    </div>
+    <p class="menu-cat-title">Bier vom Fass / birra alla spina / draft beer</p>
+    <div class="menu-grid">
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Hacker-Pschorr 0,3</div></div><div class="menu-item-price">€ 4,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Hacker-Pschorr 0,5</div></div><div class="menu-item-price">€ 6,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Erdinger Urweisse 0,3</div><div class="menu-item-desc">birra al lievito</div></div><div class="menu-item-price">€ 4,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Erdinger Urweisse 0,5</div><div class="menu-item-desc">birra al lievito</div></div><div class="menu-item-price">€ 6,00</div></div>
+    </div>
+    <p class="menu-cat-title">Alkoholfrei / analcolic / alcohol-free</p>
+    <div class="menu-grid">
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Erdinger 0,33</div></div><div class="menu-item-price">€ 4,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Forst 0,33</div></div><div class="menu-item-price">€ 4,00</div></div>
+    </div>
+    <p class="menu-cat-title">Flaschenbier / birra in bottiglia / bottled beer</p>
+    <div class="menu-grid">
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Stiegl 0,33</div></div><div class="menu-item-price">€ 4,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Forst 1857 0,33</div></div><div class="menu-item-price">€ 4,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Bud 0,33</div></div><div class="menu-item-price">€ 4,50</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Corona 0,33</div></div><div class="menu-item-price">€ 4,50</div></div>
+    </div>
+  </div>
+
+  <!-- COCKTAILS & DIGESTIVS -->
+  <div class="menu-panel" id="panel-cocktails">
+    <p class="menu-cat-title">Appetizer · Digestivs</p>
+    <div class="menu-grid">
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Aperitifs, Vermouths</div><div class="menu-item-desc">aperitivi, vermouth</div></div><div class="menu-item-price">€ 4,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Hugo, Aperol Spritz</div></div><div class="menu-item-price">€ 5,50</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Digestivs, Magenbitter</div><div class="menu-item-desc">digestivi, amari</div></div><div class="menu-item-price">€ 4,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Destillate, Schnäpse</div><div class="menu-item-desc">distillati, grappe</div></div><div class="menu-item-price">€ 4,00 – 6,00</div></div>
+    </div>
+    <p class="menu-cat-title">Spirits</p>
+    <div class="menu-grid">
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Liköre</div><div class="menu-item-desc">liquori</div></div><div class="menu-item-price">€ 4,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Whiskey</div></div><div class="menu-item-price">€ 4,00 – 10,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Cognac</div></div><div class="menu-item-price">€ 4,00 – 10,00</div></div>
+    </div>
+    <p class="menu-cat-title">Cocktails</p>
+    <div class="menu-grid">
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Bacardi Cola</div></div><div class="menu-item-price">€ 7,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Cuba Libre</div></div><div class="menu-item-price">€ 7,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Vodka Lemon</div></div><div class="menu-item-price">€ 7,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Rischele</div></div><div class="menu-item-price">€ 7,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Flügerl</div></div><div class="menu-item-price">€ 7,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Whiskey Cola (Jack Daniels)</div></div><div class="menu-item-price">€ 7,50</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Caipirinha / Caipirosca</div></div><div class="menu-item-price">€ 7,50</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Pina Colada</div></div><div class="menu-item-price">€ 7,50</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Sex on the beach</div></div><div class="menu-item-price">€ 7,50</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Tequila Sunrise</div></div><div class="menu-item-price">€ 7,50</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Cocktails ohne Alkohol</div><div class="menu-item-desc">cocktails analcolici</div></div><div class="menu-item-price">€ 7,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Gin Tonic</div></div><div class="menu-item-price">€ 7,00 – 12,50</div></div>
+    </div>
+  </div>
+
+  <!-- SOFTDRINKS -->
+  <div class="menu-panel" id="panel-softdrinks">
+    <p class="menu-cat-title">Organics by Red Bull — Bio-Erfrischungsgetränke</p>
+    <div class="menu-grid">
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Tonic Water<span class="menu-item-badge">New</span></div><div class="menu-item-desc">250cl</div></div><div class="menu-item-price">€ 4,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Ginger Beer<span class="menu-item-badge">New</span></div><div class="menu-item-desc">250cl</div></div><div class="menu-item-price">€ 4,00</div></div>
+    </div>
+    <p class="menu-cat-title">Softdrinks</p>
+    <div class="menu-grid">
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Mineralwasser 0,3</div><div class="menu-item-desc">acqua minerale / mineral water</div></div><div class="menu-item-price">€ 1,50</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Mineralwasser 0,5</div><div class="menu-item-desc">acqua minerale / mineral water</div></div><div class="menu-item-price">€ 2,70</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Limonaden / Coca Cola 0,3</div><div class="menu-item-desc">limonate / lemonades</div></div><div class="menu-item-price">€ 3,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Weißer Tee 0,2</div><div class="menu-item-desc">té freddo bianco / cold white tea</div></div><div class="menu-item-price">€ 3,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Grüner Tee 0,3</div><div class="menu-item-desc">té freddo verde / cold green tea</div></div><div class="menu-item-price">€ 3,50</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Schweppes: Tonic, Lemon, Ginger Ale 0,2</div></div><div class="menu-item-price">€ 3,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Lemonsoda, Oransoda 0,2</div></div><div class="menu-item-price">€ 3,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Dosen 0,33</div><div class="menu-item-desc">lattine / can — Fanta, Coca Cola, Cola Zero, Sprite, Icetea Pfirsich / pesca / peach</div></div><div class="menu-item-price">€ 3,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Red Bull</div></div><div class="menu-item-price">€ 4,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Säfte 0,2 / 0,3</div><div class="menu-item-desc">Succhi di frutta / Fruit juices — Orange, Pfirsich, Marille, Birne, Apfel, Jambo, Ananas</div></div><div class="menu-item-price">€ 3,00</div></div>
+    </div>
+  </div>
+
+  <!-- COFFEE & HOT DRINKS -->
+  <div class="menu-panel" id="panel-heiss">
+    <p class="menu-cat-title">Coffee and hot stuff</p>
+    <div class="menu-grid">
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Espresso</div></div><div class="menu-item-price">€ 1,80</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Macchiato</div></div><div class="menu-item-price">€ 1,80</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Macchiatone</div></div><div class="menu-item-price">€ 2,30</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Cappuccino</div></div><div class="menu-item-price">€ 2,90</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Latte macchiato</div></div><div class="menu-item-price">€ 3,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Caffé corretto</div></div><div class="menu-item-price">€ 2,90</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Schokolade klein</div><div class="menu-item-desc">cioccolata piccola / small chocolate</div></div><div class="menu-item-price">€ 2,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Schokolade</div><div class="menu-item-desc">cioccolata / chocolate</div></div><div class="menu-item-price">€ 3,00</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Schokolade dick</div><div class="menu-item-desc">cioccolata densa / viscid chocolate</div></div><div class="menu-item-price">€ 3,80</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Schokolade weiß dick</div><div class="menu-item-desc">cioccolata bianca densa / white viscid chocolate</div></div><div class="menu-item-price">€ 3,80</div></div>
+    </div>
+    <p class="menu-cat-title">Tee / té / tea</p>
+    <div class="menu-grid">
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Schwarz, Kamille, Pfefferminz</div><div class="menu-item-desc">Nero, camomilla, menta / black, camomile, peppermint</div></div><div class="menu-item-price">€ 2,90</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Aufgussgetränke</div><div class="menu-item-desc">infusi / infusion — Früchte, Waldfrüchte, Hüttenzauber, Orange Ingwer</div></div><div class="menu-item-price">€ 2,90</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Gesundheits-Tees</div><div class="menu-item-desc">té salutari / healthy tea — Südtiroler Almkräuter, Grüntee, Fenchel, Kümmel, Anis, Kamille, Echinacea</div></div><div class="menu-item-price">€ 2,90</div></div>
+    </div>
+    <p class="menu-cat-title">Sonstiges</p>
+    <div class="menu-grid">
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Jagertee</div></div><div class="menu-item-price">€ 4,50</div></div>
+      <div class="menu-item"><div class="menu-item-info"><div class="menu-item-name">Glühwein / vin brulé / mull wine</div></div><div class="menu-item-price">€ 4,50</div></div>
+    </div>
+    <p class="menu-note">Alle Preise inkl. MwSt. · Änderungen vorbehalten.</p>
+  </div>
+
+</div><!-- /page-menu -->
+
+
+<!-- ══════════════════════════════════
+     PAGE: LASERGAME
+══════════════════════════════════════ -->
+<div class="page" id="page-laser">
+
+  <section class="laser-hero" style="padding:5rem;">
+    <div class="laser-hero-bg"></div>
+    <div class="laser-hero-content">
+      <br>
+      <div class="hero-tag" style="background:#5B2BE8;">Q-Fun Lasergame · Reischach / Bruneck</div>
+      <h1 style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(3rem,8vw,6rem);font-weight:800;line-height:0.92;text-transform:uppercase;margin-bottom:1rem;">Live<br><span style="color:#9B6FFF;">Gaming</span><br>Event.</h1>
+      <p style="font-size:1rem;font-weight:300;color:rgba(240,237,232,0.65);max-width:480px;margin-bottom:2rem;">8 Spieler · 25 Minuten · 100% Fun — Taktik, Strategie und Teamwork auf 350 m².</p>
+      <a href="tel:+393484888744" class="btn-primary" style="background:#5B2BE8;">Jetzt reservieren: +39 348 488 87 44</a>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="laser-stats">
+    <div class="laser-stat"><div class="num">350</div><div class="lbl">m² Arena</div></div>
+    <div class="laser-stat"><div class="num">25</div><div class="lbl">Minuten / Spiel</div></div>
+    <div class="laser-stat"><div class="num">20</div><div class="lbl">Max. Spieler</div></div>
+    <div class="laser-stat"><div class="num">∞</div><div class="lbl">Altersgrenze</div></div>
+  </div>
+
+  <!-- WIE FUNKTIONIERT ES -->
+  <section class="page-section dark-band">
+    <div class="container">
+      <p class="sec-label">Das Spiel</p>
+      <h2 class="sec-title">Wie funktioniert Lasergame?</h2>
+      <p class="sec-body">Lasergame ist ein spannendes Live-Gaming-Event und verbindet sportliche Herausforderungen mit Taktik, Strategie und Teamwork. Komplett schmerzfrei — gespielt wird mit Infrarotlicht.</p>
+      <div class="how-grid">
+        <div class="how-card"><div class="how-step">01</div><h4>Teams bilden</h4><p>2 Mannschaften mit max. 10 gegen 10 Personen. Ab 8 Spieler macht das Spiel richtig Spaß.</p></div>
+        <div class="how-card"><div class="how-step">02</div><h4>Ausrüstung anlegen</h4><p>Jeder Spieler erhält eine Weste mit Sensoren und einen Pointer (Infrarotlicht) als Waffe.</p></div>
+        <div class="how-card"><div class="how-step">03</div><h4>Die Arena erobern</h4><p>Ziel ist es, die gegnerische Basis zu erobern und gleichzeitig die eigene zu verteidigen — wie Capture the Flag.</p></div>
+        <div class="how-card"><div class="how-step">04</div><h4>Auswertung</h4><p>Nach 25 Minuten gibt es eine genaue Auswertung: Siegerteam, bester Spieler & Trefferbilanz.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PREISE -->
+  <section class="page-section">
+    <div class="container">
+      <p class="sec-label">Preise pro Person & Spielrunde</p>
+      <h2 class="sec-title">Eintrittspreise</h2>
+      <div class="price-cards">
+        <div class="price-card" style="border-top:3px solid #9B6FFF;">
+          <div class="age">Kinder</div>
+          <div class="price"><sup>€</sup>6</div>
+          <div class="who">bis 15 Jahre</div>
+        </div>
+        <div class="price-card" style="border-top:3px solid #5B2BE8;background:#252525;">
+          <div class="age">Jugendliche / Studenten</div>
+          <div class="price"><sup>€</sup>8</div>
+          <div class="who">15–18 Jahre oder Studentenausweis</div>
+        </div>
+        <div class="price-card" style="border-top:3px solid #9B6FFF;">
+          <div class="age">Erwachsene</div>
+          <div class="price"><sup>€</sup>10</div>
+          <div class="who">ab 18 Jahre</div>
+        </div>
+      </div>
+      <p style="font-size:0.82rem;color:var(--muted);margin-top:1.5rem;">Lasergame ist deutlich günstiger als vergleichbare Paintball-Sessions. Die Arena ist täglich geöffnet. Reservierungen jederzeit telefonisch möglich. Minderährige benötigen eine Einverständniserklärung der Eltern.</p>
+    </div>
+  </section>
+
+  <!-- GALERIEBILDER -->
+  <div class="img-strip" style="height:280px;">
+    <img src="https://i0.wp.com/lasergame.bz/wp-content/uploads/2018/09/lasergame-team-4.jpg?w=960&q=80" alt="Lasergame Team" onerror="this.src='https://images.unsplash.com/photo-1511882150382-421056c89033?w=900&q=80'"/>
+    <img src="https://i0.wp.com/lasergame.bz/wp-content/uploads/2018/09/lasergame-team-1.jpg?w=720&q=80" alt="Lasergame" onerror="this.src='https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=500&q=80'"/>
+    <img src="https://i0.wp.com/lasergame.bz/wp-content/uploads/2018/09/lasergame-team-5.jpg?w=960&q=80" alt="Lasergame Fun" onerror="this.src='https://images.unsplash.com/photo-1534294668821-28a3054f4256?w=500&q=80'"/>
+  </div>
+
+  <!-- RESERVIERUNG -->
+  <section class="page-section hours-section" style="background:#1a0a3a;">
+    <div class="container">
+      <p style="margin-top:10rem;"></p>
+      <p class="sec-label" style="color:rgba(155,111,255,0.7);">Buchung</p>
+      <h2 class="sec-title">Reservierung & Kontakt</h2>
+      <div class="contact-grid">
+        <div>
+          <div class="contact-block">
+            <h3 style="color:#9B6FFF;">Lasergame-Hotline</h3>
+            <div class="contact-row"><a href="tel:+393484888744" style="font-size:1.3rem;font-family:'Barlow Condensed',sans-serif;font-weight:700;">+39 348 488 87 44</a></div>
+            <div class="contact-row"><span style="font-size:0.85rem;">Täglich · Reservierungen jederzeit möglich</span></div>
+          </div>
+          <div class="contact-block" style="margin-top:2rem;">
+            <h3 style="color:#9B6FFF;">Adresse</h3>
+            <div class="contact-row"><span>Harrasserstraße 1<br>39031 Reischach / Bruneck (BZ)</span></div>
+          </div>
+          <div class="contact-block" style="margin-top:2rem;">
+            <h3 style="color:#9B6FFF;">Hinweis</h3>
+            <div class="contact-row"><span>Minderjährige müssen eine Einverständniserklärung der Eltern mitbringen. Formular auf Anfrage erhältlich.</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="contact-block">
+            <h3 style="color:#9B6FFF;">Öffnungszeiten</h3>
+            <div style="margin-top:1rem;">
+              <div class="hour-col" style="border-left:none;padding:0 0 1rem;"><div class="hour-day" style="color:rgba(155,111,255,0.7);">Täglich</div><div class="hour-time">Auf Reservierung</div></div>
+              <p style="font-size:0.85rem;color:var(--muted);margin-top:1rem;">Die Arena ist jeden Tag buchbar. Bitte rechtzeitig reservieren, besonders an Wochenenden und Feiertagen.</p>
+            </div>
+          </div>
+          <div style="margin-top:2rem;">
+            <a href="tel:+393484888744" class="btn-primary" style="background:#5B2BE8;width:100%;text-align:center;display:block;">Jetzt anrufen & buchen</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /page-laser -->
+
+
+<!-- ══════════════════════════════════
+     PAGE: CAFFÈ
+══════════════════════════════════════ -->
+<div class="page" id="page-cafe">
+
+  <section class="cafe-hero" style="padding: 4rem;;">
+    <div class="cafe-hero-bg"></div>
+    <div class="cafe-hero-content">
+    </br>
+  </br>
+      <div class="hero-tag" style="background:#6B4C2A;">Sport's Arena · Caffè & Bar </div>
+      <h1 style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(3rem,8vw,9rem);font-weight:800;line-height:0.72;text-transform:uppercase;margin-bottom:1rem;">Caffè<br><span style="color:#D4A853;">& Bar</span></h1>
+      <p style="font-size:1rem;font-weight:300;color:rgba(240,237,232,0.65);max-width:480px;margin-bottom:2rem;">Von Frühstückskaffee bis Mitternachtscocktail — unser Café ist täglich geöffnet, ohne Ruhetag.</p>
+      <a href="tel:+390474413600" class="btn-primary" style="background:#6B4C2A;">Tisch reservieren</a>
+    </div>
+  </section>
+
+  <!-- ÖFFNUNGSZEITEN CAFÉ -->
+  <div class="cafe-hours">
+    <div class="cafe-hour">
+      <div class="ch-label">Café-Öffnungszeiten</div>
+      <div class="ch-days">Mo – Fr</div>
+      <div class="ch-time">06:00 – 19:00</div>
+    </div>
+    <div class="cafe-hour">
+      <div class="ch-label">Café-Öffnungszeiten</div>
+      <div class="ch-days">Samstag</div>
+      <div class="ch-time">06:00 – 24:00</div>
+    </div>
+    <div class="cafe-hour">
+      <div class="ch-label">Café-Öffnungszeiten</div>
+      <div class="ch-days">Sonntag</div>
+      <div class="ch-time">07:00 – 24:00</div>
+    </div>
+    <div class="cafe-hour" style="background:#1a1000;">
+      <div class="ch-label" style="color:rgba(212,168,83,0.8);">Kein Ruhetag</div>
+      <div class="ch-days">365 Tage</div>
+      <div class="ch-time" style="color:#D4A853;">Durchgehend</div>
+    </div>
+  </div>
+
+  
+
+  
+
+</div><!-- /page-cafe -->
+
+
+<!-- ══════════════════════════════════
+     PAGE: LEGAL
+══════════════════════════════════════ -->
+<div class="page" id="page-legal">
+  <div class="legal-inner">
+    <div class="legal-tabs">
+      <div class="legal-tab active" onclick="switchLegal('impressum')">Impressum</div>
+      <div class="legal-tab" onclick="switchLegal('datenschutz')">Datenschutz</div>
+    </div>
+
+    <!-- IMPRESSUM -->
+    <div class="legal-section active" id="legal-impressum">
+      <h1>Impressum</h1>
+      <p class="legal-meta">Angaben gemäß § 5 TMG / Art. 7 D.Lgs. 70/2003</p>
+      <h2>Betreiber</h2>
+      <p>Sport's Arena<br>Harrasserstraße 1 / Via Harrasser 1<br>39031 Reischach / Bruneck (BZ), Italien</p>
+      <h2>Kontakt</h2>
+      <p>Tel: +39 0474 413 600 / +39 0474 554 293<br>E-Mail: <a href="mailto:info@sports-arena.eu">info@sports-arena.eu</a></p>
+      <h2>Umsatzsteuer-ID</h2>
+      <p>Partita IVA / MwSt.-Nr.: 01739170213</p>
+      <h2>Handelsregister</h2>
+      <p>Registro delle Imprese di Bolzano · REA: BZ-[Nummer eintragen]</p>
+      <h2>Verantwortlich für den Inhalt</h2>
+      <p>[Vorname Nachname des Inhabers]<br>Harrasserstraße 1, 39031 Reischach</p>
+      <h2>Streitschlichtung</h2>
+      <p>Die EU-Kommission bietet eine Plattform zur Online-Streitbeilegung: <a href="https://ec.europa.eu/consumers/odr" target="_blank">ec.europa.eu/consumers/odr</a>. Wir nehmen nicht an Streitbeilegungsverfahren teil.</p>
+      <h2>Haftung für Inhalte & Links</h2>
+      <p>Als Diensteanbieter sind wir für eigene Inhalte verantwortlich. Für externe Links übernehmen wir keine Haftung.</p>
+      <h2>Urheberrecht</h2>
+      <p>Alle Inhalte dieser Website unterliegen dem Urheberrecht. Vervielfältigung bedarf unserer schriftlichen Zustimmung.</p>
+    </div>
+
+    <!-- DATENSCHUTZ -->
+    <div class="legal-section" id="legal-datenschutz">
+      <h1>Datenschutzerklärung</h1>
+      <p class="legal-meta">Art. 13 DSGVO / GDPR (Reg. UE 2016/679) · Stand: Juni 2026</p>
+      <h2>1. Verantwortlicher</h2>
+      <p>Sport's Arena · Harrasserstraße 1, 39031 Reischach (BZ) · <a href="mailto:info@sports-arena.eu">info@sports-arena.eu</a></p>
+      <h2>2. Server-Logfiles</h2>
+      <p>Beim Seitenbesuch werden IP-Adresse, Zugriffszeit, Browser und Referrer-URL temporär (7 Tage) gespeichert. Rechtsgrundlage: Art. 6 Abs. 1 lit. f DSGVO.</p>
+      <h2>3. Kontaktaufnahme</h2>
+      <p>Bei Kontakt per E-Mail/Telefon werden Ihre Daten zur Bearbeitung gespeichert (Art. 6 Abs. 1 lit. b DSGVO) und nach Abschluss gelöscht.</p>
+      <h2>4. Cookies</h2>
+      <p>Diese Website nutzt ausschließlich technisch notwendige Cookies — kein Tracking, keine Werbung.</p>
+      <h2>5. Google Fonts</h2>
+      <p>Wir nutzen Google Fonts (Google LLC, USA). Beim Laden kann Ihre IP an Google übertragen werden. Weitere Infos: <a href="https://policies.google.com/privacy" target="_blank">policies.google.com/privacy</a></p>
+      <h2>6. Social Media & Facebook</h2>
+      <p>Wir verlinken auf unser Facebook-Profil (Meta Platforms Ireland Ltd.). Beim Klick auf den Link gelten die Datenschutzbestimmungen von Meta.</p>
+      <h2>7. Sportwetten (Intralot)</h2>
+      <p>Für Sportwetten kooperieren wir mit Intralot. Für deren Datenschutz gelten die Bestimmungen von Intralot — Details auf Anfrage.</p>
+      <h2>8. Ihre Rechte</h2>
+      <ul>
+        <li>Auskunftsrecht (Art. 15), Berichtigung (Art. 16), Löschung (Art. 17)</li>
+        <li>Einschränkung (Art. 18), Datenübertragbarkeit (Art. 20), Widerspruch (Art. 21)</li>
+        <li>Beschwerderecht bei der Datenschutzbehörde</li>
+      </ul>
+      <p>Kontakt: <a href="mailto:info@sports-arena.eu">info@sports-arena.eu</a></p>
+      <h2>9. Aufsichtsbehörde</h2>
+      <p>Garante per la protezione dei dati personali · Piazza Venezia 11, 00187 Rom · <a href="https://www.garanteprivacy.it" target="_blank">www.garanteprivacy.it</a></p>
+    </div>
+  </div>
+</div><!-- /page-legal -->
+
+
+<!-- ══════════════ FOOTER ══════════════ -->
+<footer>
+  <div class="footer-brand">
+    <svg class="logo-svg-sm" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="50" cy="50" r="49" fill="#D72020"/>
+      <ellipse cx="50" cy="28" rx="30" ry="16" fill="rgba(255,255,255,0.15)"/>
+      <text x="50" y="40" text-anchor="middle" font-family="Arial Narrow,Arial,sans-serif" font-weight="700" font-size="16" fill="#8DC63F" letter-spacing="0.5">sport's</text>
+      <text x="50" y="62" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="26" fill="#1B6FBB" letter-spacing="-0.5">ARENA</text>
+      <text x="50" y="76" text-anchor="middle" font-family="Arial,sans-serif" font-weight="400" font-size="10" fill="white" letter-spacing="0.3">food &amp; fun</text>
+    </svg>
+    <div class="footer-text">
+      <div class="ft-name">Sport's Arena · Reischach</div>
+      <div class="ft-slogan">hear, feel, have fun! · © 2026</div>
+    </div>
+  </div>
+  <div class="footer-links">
+    <a onclick="goPage('home')">Home</a>
+    <a onclick="goPage('menu')">Speisekarte</a>
+    <a onclick="goPage('laser')">Lasergame</a>
+    <a onclick="goPage('cafe')">Caffè</a>
+    <a onclick="goPage('legal')">Impressum & Datenschutz</a>
+    
+  </div>
+</footer>
+
+<script>
+  // ── PAGE NAVIGATION ──
+  function goPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + id).classList.add('active');
+    window.scrollTo(0,0);
+    // Update nav active state
+    document.querySelectorAll('.nav-links a[data-page]').forEach(a => {
+      a.classList.toggle('active', a.dataset.page === id);
+    });
+  }
+
+  // ── MENU TABS ──
+  function switchTab(id) {
+    document.querySelectorAll('.menu-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.menu-panel').forEach(p => p.classList.remove('active'));
+    event.target.classList.add('active');
+    document.getElementById('panel-' + id).classList.add('active');
+  }
+
+  // ── LEGAL TABS ──
+  function switchLegal(id) {
+    document.querySelectorAll('.legal-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.legal-section').forEach(s => s.classList.remove('active'));
+    event.target && event.target.classList.add('active');
+    document.getElementById('legal-' + id).classList.add('active');
+    // Activate the right tab button too
+    document.querySelectorAll('.legal-tab').forEach(t => {
+      if(t.getAttribute('onclick').includes(id)) t.classList.add('active');
+    });
+  }
+
+  // ── MOBILE NAV ──
+  function toggleNav() { document.getElementById('navLinks').classList.toggle('open'); }
+  function closeNav() { document.getElementById('navLinks').classList.remove('open'); }
+</script>
+</body>
+</html>
 
