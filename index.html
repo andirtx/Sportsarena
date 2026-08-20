@@ -80,8 +80,8 @@
 
     /* ── ABOUT ── */
     .about-grid { display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:center; margin-top:3rem; }
-    .about-img { position:relative; aspect-ratio:4/3; overflow:hidden; }
-    .about-img img { width:100%; height:100%; object-fit:cover; display:block; }
+    .about-img { position:relative; aspect-ratio:4/3; overflow:hidden; box-shadow:0 20px 50px rgba(0,0,0,0.5); }
+    .about-img img { width:100%; height:100%; object-fit:cover; object-position:center 38%; display:block; }
     .about-img::before { content:''; position:absolute; top:-12px; left:-12px; right:12px; bottom:12px; border:2px solid var(--red); z-index:-1; }
     .feature-list { margin-top:2rem; display:flex; flex-direction:column; gap:1rem; }
     .feature-item { display:flex; gap:1rem; align-items:flex-start; }
@@ -316,14 +316,14 @@
   </div>
 
   <!-- ÜBER UNS -->
-  <section class="page-section dark-band" id="ueber">
+  <section class="page-section" style="background:var(--black);" id="ueber">
     <div class="container">
       <div class="about-grid">
         <div class="about-img">
           <img src="https://images.unsplash.com/photo-1599685315659-bc876da49fe5?q=80&w=1770&auto=format&fit=crop" alt="Billiard" loading="lazy"/>
         </div>
         <div>
-          <p class="sec-label">Über uns</p>
+          <p class="sec-label" style="margin-top:0.5rem;">Über uns</p>
           <h2 class="sec-title">Die #1 Sports Bar der Region</h2>
           <p class="sec-body">Seit 2002 sind wir der Anlaufpunkt für alle, die Sport, gutes Essen und echte Atmosphäre lieben. Auf rund 1000 m² bieten wir alles, was das Herz begehrt.</p>
           <div class="feature-list">
